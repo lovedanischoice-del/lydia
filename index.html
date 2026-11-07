@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>✨ 디아크 · 루디아 인스타 릴스 뚝딱 스튜디오</title>
+  <style>
+    body {
+      margin: 0; padding: 24px; min-height: 100vh;
+      background: #0d0d12; color: #f6f7fb;
+      font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+    }
+    .box {
+      max-width: 420px; width: 100%; background: #171721;
+      border: 1px solid #2b2b3d; border-radius: 22px; padding: 32px 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .badge {
+      display: inline-block; background: linear-gradient(135deg, #ff5e7e, #ff9a5a);
+      color: #fff; font-weight: 800; font-size: 12px; padding: 5px 12px; border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    h1 { font-size: 21px; margin: 0 0 10px 0; }
+    p { font-size: 14px; color: #9fa3b8; line-height: 1.5; margin-bottom: 22px; }
+    .btn {
+      display: block; width: 100%; box-sizing: border-box;
+      background: linear-gradient(135deg, #ff5e7e, #ff9a5a);
+      color: #fff; text-decoration: none; font-weight: 800; font-size: 16px;
+      padding: 15px; border-radius: 14px;
+    }
+    .spinner {
+      width: 34px; height: 34px; border: 3.5px solid #2b2b3d;
+      border-top-color: #ff5e7e; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 0 auto 16px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="spinner" id="sp"></div>
+    <span class="badge">평생 고정 주소 게이트웨이</span>
+    <h1>✨ 인스타 릴스 뚝딱 스튜디오</h1>
+    <p id="msg">현재 켜져 있는 최신 스튜디오 서버로 자동 이동하고 있습니다...</p>
+    <a id="goBtn" class="btn" href="#">🎬 스튜디오 바로 열기</a>
+  </div>
+  <script>
+    async function connectStudio() {
+      let targetUrl = '';
+      try {
+        const r = await fetch('https://api.github.com/repos/lovedanischoice-del/lydia/contents/tunnel.json?t=' + Date.now(), {
+          headers: { 'Accept': 'application/vnd.github.v3+json' },
+          cache: 'no-store'
+        });
+        if (r.ok) {
+          const j = await r.json();
+          const decoded = JSON.parse(atob(j.content.replace(/\s/g, '')));
+          targetUrl = decoded.url;
+        }
+      } catch (e) {}
+      if (!targetUrl) {
+        try {
+          const r2 = await fetch('./tunnel.json?t=' + Date.now(), { cache: 'no-store' });
+          if (r2.ok) {
+            const d2 = await r2.json();
+            targetUrl = d2.url;
+          }
+        } catch (e) {}
+      }
+      if (targetUrl && targetUrl.startsWith('https://')) {
+        document.getElementById('goBtn').href = targetUrl;
+        window.location.replace(targetUrl);
+      } else {
+        document.getElementById('msg').textContent = '연결 정보를 불러오지 못했습니다. 아래 버튼을 눌러 다시 시도해 주세요.';
+      }
+    }
+    connectStudio();
+  </script>
+</body>
+</html>
